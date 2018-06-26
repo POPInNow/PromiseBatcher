@@ -1,0 +1,38 @@
+{
+  "name": "promise-batching-queue",
+  "version": "0.0.1",
+  "description": "Promise batching library. Runs promises in ordered queues which can be limited to a maximum size.",
+  "repository": "https://github.com/POPinNow/PromiseBatcher",
+  "author": "Peter Yamanaka <developer@popinnow.com>",
+  "license": "Apache-2.0",
+  "private": false,
+  "main": "dist/promisebatcher.min.js",
+  "keywords": [
+    "promisebatcher",
+    "promise-batcher",
+    "promise-queue",
+    "promise"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "~6.26.3",
+    "babel-loader": "~7.1.4",
+    "babel-preset-env": "~1.7.0",
+    "chai": "~4.1.2",
+    "chai-as-promised": "~7.1.1",
+    "cross-env": "~5.2.0",
+    "mocha": "~5.2.0",
+    "uglifyjs-webpack-plugin": "~1.2.7",
+    "webpack": "~4.12.1",
+    "webpack-cli": "~3.0.8"
+  },
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --progress --colors --optimize-minimize",
+    "debug": "cross-env NODE_ENV=development webpack --progress --colors",
+    "test": "mkdir -p dist/test && webpack --progress --colors ./test/*.test.js -o ./dist/test/tests.js --target node && mocha --require babel-core/register --colors ./dist/test/tests.js",
+    "clean-dist": "[ -e ./dist ] && [ -d ./dist ] && rm -rf ./dist",
+    "clean-modules": "[ -e ./node_modules ] && [ -d ./node_modules ] && rm -rf ./node_modules",
+    "clean": "yarn clean-dist && yarn clean-modules",
+    "prepare-publish": "yarn clean && yarn && yarn test && yarn clean-dist && yarn build"
+  }
+}

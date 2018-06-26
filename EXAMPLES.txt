@@ -1,0 +1,79 @@
+/**
+ * Have a bunch of promises, run them all in parallel, and chain off the result
+ */
+const eagerQueue = PromiseBatcher.newEagerQueue();
+
+const listOfPromises = [ ... ];
+listOfPromises.map(promise => eagerQueue.queue(() => promise)).forEach(result => {
+  result.then(stuff => {
+    // Do something with your stuff
+  });
+});
+
+/**
+ * Run Promises as they come in, but do not exceed a max amount to keep system responsive
+ */
+const eagerQueue = PromiseBatcher.newEagerQueue();
+
+button.click(() => {
+  eagerQueue.queue(() => {
+    return Promise.resolve(generateRandomNumber());
+  }).then(randomNumber => {
+    // Do math or something
+  });
+});
+
+/**
+ * Run promises 1 at a time, guaranteeing execution order
+ */
+const serialQueue = PromiseBatcher.newSerialQueue();
+
+const listOfPromises = [ ... ];
+listOfPromises.map(promise => serialQueue.queue(() => promise)).forEach(result => {
+  result.then(stuff => {
+    // Do something with your stuff
+  });
+});
+
+/**
+ * Run a bunch of promises, 1 at a time and group the result
+ */
+new Promise((resolve, reject) => {
+  const serialQueue = PromiseBatcher.newSerialQueue();
+
+  const listOfPromises = [ ... ];
+  const totalCount = listOfPromises.length;
+
+  const successes = [];
+  const failures = [];
+
+  const areWeDoneYet = function (allResolves, allRejects, totalCount) {
+    return allResolves.length + allRejects.length >= totalCount;
+  };
+
+  for (let promise of listOfPromises) {
+    serialQueue.queue(() => promise)
+      .then(result => {
+        successes.push(result);
+
+        if (areWeDoneYet(successes, failures, totalCount)) {
+          resolve({
+            successes,
+            failures
+          });
+        }
+
+      }).catch(error => {
+        failures.push(reject);
+
+        if (areWeDoneYet(successes, failures, totalCount)) {
+          resolve({
+            successes,
+            failures
+          });
+        }
+      });
+  }
+}).then(({ successes, failures }) => {
+  // Do something with all the results
+})
