@@ -54,8 +54,8 @@ describe('PromiseBatchingQueue() queue test', () => {
    * When the active queue fills up, promises sit in waiting
    * @type {PromiseBatchingQueue}
    */
-  const queue1 = new PromiseBatchingQueue(4);
   it('Active Queue overflows into waiting', () => {
+    const queue1 = new PromiseBatchingQueue(4);
     queueAndCheck(queue1, 1, 0);
     queueAndCheck(queue1, 2, 0);
     queueAndCheck(queue1, 3, 0);
@@ -68,8 +68,8 @@ describe('PromiseBatchingQueue() queue test', () => {
    * The queue overflows but eventually clears the overflow and resolves all callers
    * @type {PromiseBatchingQueue}
    */
-  const queue2 = new PromiseBatchingQueue(4);
   it('Active Queue overflows eventually clears out', () => {
+    const queue2 = new PromiseBatchingQueue(4);
     queueAndCheck(queue2, 1, 0);
     queueAndCheck(queue2, 2, 0);
     queueAndCheck(queue2, 3, 0);
@@ -86,8 +86,8 @@ describe('PromiseBatchingQueue() queue test', () => {
    * Queue handles errors when they occur by returning them to caller
    * @type {PromiseBatchingQueue}
    */
-  const queue3 = new PromiseBatchingQueue(4);
   it('Queue beacons errors', () => {
+    const queue3 = new PromiseBatchingQueue(4);
     return expect(queue3.queue(() => {
       return Promise.resolve(true).then(() => {
         throw Error('Error');
@@ -99,8 +99,8 @@ describe('PromiseBatchingQueue() queue test', () => {
    * Even if an error occurs resolving one promise in the queue, it does not affect any other promises
    * @type {PromiseBatchingQueue}
    */
-  const queue4 = new PromiseBatchingQueue(4);
   it(`Queue doesn't stop on error`, () => {
+    const queue4 = new PromiseBatchingQueue(4);
     return (
       expect(queue4.queue(() => delayedPromiseGenerator(100))).eventually.be.fulfilled &&
       expect(queue4.queue(() => {
