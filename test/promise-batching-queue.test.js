@@ -45,7 +45,7 @@ describe('PromiseBatchingQueue() queue test', () => {
 
   // Size updates immediately even though Promise may not be done
   const queueAndCheck = (queue, active, waiting) => {
-    queue.queue(() => delayedPromiseGenerator(100));
+    queue.queue(() => delayedPromiseGenerator(10));
     expect(queue.getActiveSize()).to.equal(active);
     expect(queue.getWaitingSize()).to.equal(waiting);
   };
@@ -55,13 +55,14 @@ describe('PromiseBatchingQueue() queue test', () => {
    * @type {PromiseBatchingQueue}
    */
   it('Active Queue overflows into waiting', () => {
-    const queue1 = new PromiseBatchingQueue(4);
-    queueAndCheck(queue1, 1, 0);
-    queueAndCheck(queue1, 2, 0);
-    queueAndCheck(queue1, 3, 0);
-    queueAndCheck(queue1, 4, 0);
-    queueAndCheck(queue1, 4, 1);
-    queueAndCheck(queue1, 4, 2);
+    const QUEUE_MAX = 4;
+    const TEST_COUNT = 800;
+    const queue1 = new PromiseBatchingQueue(QUEUE_MAX);
+    for (let i = 0; i < TEST_COUNT; ++i) {
+      const active = Math.min(QUEUE_MAX, i + 1);
+      const waiting = Math.max(0, (i + 1) - QUEUE_MAX);
+      queueAndCheck(queue1, active, waiting);
+    }
   });
 
   /**
@@ -69,17 +70,16 @@ describe('PromiseBatchingQueue() queue test', () => {
    * @type {PromiseBatchingQueue}
    */
   it('Active Queue overflows eventually clears out', () => {
-    const queue2 = new PromiseBatchingQueue(4);
-    queueAndCheck(queue2, 1, 0);
-    queueAndCheck(queue2, 2, 0);
-    queueAndCheck(queue2, 3, 0);
-    queueAndCheck(queue2, 4, 0);
-    return (
-      expect(queue2.queue(() => delayedPromiseGenerator(100))).eventually.be.fulfilled &&
-      expect(queue2.queue(() => delayedPromiseGenerator(100))).eventually.be.fulfilled &&
-      expect(queue2.queue(() => delayedPromiseGenerator(100, 'hello'))).eventually.equal('hello') &&
-      expect(queue2.queue(() => delayedPromiseGenerator(100, 'world'))).eventually.equal('world')
-    );
+    const QUEUE_MAX = 4;
+    const TEST_COUNT = 600;
+    const queue2 = new PromiseBatchingQueue(QUEUE_MAX);
+    let result = [];
+
+    for (let i = 1; i < TEST_COUNT; ++i) {
+      result.push(expect(queue2.queue(() => delayedPromiseGenerator(10, i))).eventually.equal(i))
+    }
+
+    return Promise.all(result);
   });
 
   /**
