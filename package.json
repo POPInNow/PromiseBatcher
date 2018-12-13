@@ -17,8 +17,9 @@
   "devDependencies": {
     "@babel/core": "~7.0.0",
     "@babel/preset-env": "~7.0.0",
+    "@babel/register": "~7.0.0",
     "babel-loader": "~8.0.0",
-    "chai": "~4.1.2",
+    "chai": "~4.2.0",
     "chai-as-promised": "~7.1.1",
     "cross-env": "~5.2.0",
     "mocha": "~5.2.0",
@@ -29,7 +30,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --colors --optimize-minimize",
     "debug": "cross-env NODE_ENV=development webpack --progress --colors",
-    "test": "mkdir -p dist/test && webpack --progress --colors ./test/*.test.js -o ./dist/test/tests.js --target node && mocha --require babel-core/register --colors ./dist/test/tests.js",
+    "test": "mkdir -p dist/test && webpack --progress --colors ./test/*.test.js -o ./dist/test/tests.js --target node && mocha --require @babel/register --colors ./dist/test/tests.js",
     "clean-dist": "[ -e ./dist ] && [ -d ./dist ] && rm -rf ./dist",
     "clean-modules": "[ -e ./node_modules ] && [ -d ./node_modules ] && rm -rf ./node_modules",
     "clean": "yarn clean-dist && yarn clean-modules",
