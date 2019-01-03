@@ -35,7 +35,13 @@ const config = {
     filename: outputFile,
     library: 'PromiseBatcher',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
+    // There is a bug where Webpack generates a bundle which asks for window
+    // without checking its existence beforehand.
+    // This can lead to issues in node.js environments where window is
+    // undefined
+    // https://github.com/webpack/webpack/issues/6525
+    globalObject: `typeof self !== 'undefined' ? self : this`,
   },
   module: {
     rules: [
