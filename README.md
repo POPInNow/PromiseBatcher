@@ -38,13 +38,20 @@ $ npm install promise-batching-queue
 
 The API is very simple.
 
-First you import the `PromiseBatcher` class using
+First you import the `PromiseBatcher`:
+
+In the ES6 browser environment:
 ```
 import { PromiseBatcher } from 'promise-batching-queue';
 
 or (if you like default imports more)
 
 import PromiseBatcher from 'promise-batching-queue';
+```
+
+In the Node environment
+```
+const { PromiseBatcher } = require('promise-batching-queue');
 ```
 
 Then you create a new batching queue using one of the static helper methods
