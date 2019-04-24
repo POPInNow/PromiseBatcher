@@ -115,7 +115,20 @@ export class PromiseBatchingQueue {
 
     // Once the promise finishes, remove it from the queue and return to the caller
     const generator = queueObject.getPromiseGenerator();
-    generator().then(result => {
+
+    // This may be a promise, this may not be.
+    // Its a promise according to spec if it has a then method.
+    const potentialPromise = generator();
+    let promise;
+    if (!!potentialPromise.then) {
+      // We have a then method, we're basically a promise
+      promise = potentialPromise;
+    } else {
+      // I don't know what this is, but it's not a promise so resolve it as a Promise.
+      // I hope you're using an ES6 Promise library in 2019.
+      promise = Promise.resolve(potentialPromise);
+    }
+    promise.then(result => {
       const item = this.__removeItemFromArray(queueObject.getId());
       if (item != null) {
         item.resolve(result);
