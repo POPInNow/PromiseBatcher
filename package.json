@@ -1,6 +1,6 @@
 {
   "name": "promise-batching-queue",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Promise batching library. Runs promises in ordered queues which can be limited to a maximum size.",
   "repository": "https://github.com/POPinNow/PromiseBatcher",
   "author": "Peter Yamanaka <developer@popinnow.com>",
