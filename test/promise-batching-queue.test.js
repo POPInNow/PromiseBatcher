@@ -45,8 +45,11 @@ describe('PromiseBatchingQueue queue() Parameters', () => {
   it('queue() expects a function argument', () => {
     expect(() => queue.queue(1)).to.throw();
   });
-  it('queue() accepts a function argument', () => {
+  it('queue() accepts a function argument that resolves a Promise', () => {
     expect(() => queue.queue(() => Promise.resolve(true))).to.not.throw();
+  });
+  it('queue() accepts a function argument that does not resolve a Promise', () => {
+    return expect(queue.queue(() => true)).to.eventually.be.fulfilled;
   });
 });
 
