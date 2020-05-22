@@ -37,6 +37,7 @@ export class PromiseBatchingQueue {
     this.__queuePromise = this.__queuePromise.bind(this);
     this.__removeItemFromArray = this.__removeItemFromArray.bind(this);
 
+    this.clear = this.clear.bind(this);
     this.queue = this.queue.bind(this);
     this.getActiveSize = this.getActiveSize.bind(this);
     this.getWaitingSize = this.getWaitingSize.bind(this);
@@ -65,6 +66,15 @@ export class PromiseBatchingQueue {
    */
   getMaxSize () {
     return this.__maxSize;
+  }
+
+  /**
+   * Clear the queues on demand
+   */
+  clear () {
+    // Clear the waiting queue first, any active promises are already active and so will be finished
+    // unless they are cancelled via other means.
+    this.__waitingQueue = [];
   }
 
   /**
