@@ -49,39 +49,36 @@ export class QueueObject {
       throw Error('rejectFunction argument must be a function');
     }
 
-    this.__resolveFunction = resolveFunction;
-    this.__rejectFunction = rejectFunction;
-    this.__promiseGenerator = promiseGenerator;
-    this.__id = generateId();
-  }
+    const id = generateId();
 
-  /**
-   * Gets the promise generator function
-   * @return {Function}
-   */
-  getPromiseGenerator () {
-    return this.__promiseGenerator;
-  }
+    /**
+     * Gets the promise generator function
+     * @return {Function}
+     */
+    this.getPromiseGenerator = () => {
+      return promiseGenerator;
+    }
 
-  /**
-   * Gets the id
-   * @return {string}
-   */
-  getId () {
-    return this.__id;
-  }
+    /**
+     * Gets the id
+     * @return {string}
+     */
+    this.getId = () => {
+      return id;
+    }
 
-  /**
-   * Call the cached Promise resolve with the result
-   */
-  resolve (result) {
-    this.__resolveFunction(result);
-  }
+    /**
+     * Call the cached Promise resolve with the result
+     */
+    this.resolve = (result) => {
+      resolveFunction(result);
+    }
 
-  /**
-   * Call the cached Promise reject with the error
-   */
-  reject (error) {
-    this.__rejectFunction(error);
+    /**
+     * Call the cached Promise reject with the error
+     */
+    this.reject = (error) => {
+      rejectFunction(error);
+    }
   }
 }
